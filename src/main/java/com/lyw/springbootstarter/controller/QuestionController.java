@@ -2,6 +2,8 @@ package com.lyw.springbootstarter.controller;
 
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lyw.springbootstarter.annotation.AuthCheck;
@@ -22,12 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * 用户接口
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
- */
 @RestController
 @RequestMapping("/question")
 @Slf4j
@@ -128,8 +124,8 @@ public class QuestionController {
     }
 
     @PostMapping("/list/page/vo")
-    @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
-    public BaseResponse<Page<QuestionVO>> listQuestionVOByPageVO(@RequestBody QuestionGetRequestPage request) {
+    @SentinelResource(value = "listQuestionVOByPageVO")
+    public BaseResponse<Page<QuestionVO>> listQuestionVOByPageVO(@RequestBody QuestionGetRequestPage request) throws BlockException {
         QueryWrapper<Question> queryWrapper = questionService.getQueryWrapper(request);
         Page<Question> page = questionService.page(new Page<>(request.getCurrent(), request.getPageSize()), queryWrapper);
         Page<QuestionVO> questionVOPage = questionService.convertPageVO(page);

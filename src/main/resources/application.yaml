@@ -17,6 +17,7 @@ spring:
     username: ${my.db.username}
     password: ${my.db.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
   # Redis 配置
   # todo 需替换配置，然后取消注释
   #  redis:
@@ -64,12 +65,30 @@ spring:
     #        max-interval: 10000
     #        multiplier: 2
     #        stateless: true
+  cloud:
+    #  openfeign配置 开启okhttp
+    openfeign:
+      okhttp:
+        enabled: true
+    #  sentinel配置 后台监控
+    sentinel:
+      http-method-specify: true
+      #      transport:
+      #        dashboard: localhost:8089
+      log:
+        dir: "logs/sentinel"
+        switch-pid: true
 
   # 文件上传
   servlet:
     multipart:
       # 大小限制
       max-file-size: 10MB
+
+# 开启OpenFeign的限流配置
+feign:
+  sentinel:
+    enabled: true
 
 mybatis-plus:
   type-aliases-package:
@@ -95,6 +114,11 @@ logging:
     dateformat: HH:mm:ss:SSS
   file:
     path: "logs/${spring.application.name}"
+
+judge:
+  code:
+    sandbox:
+      type: default
 
 
 knife4j:

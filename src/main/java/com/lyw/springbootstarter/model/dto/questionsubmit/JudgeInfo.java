@@ -16,7 +16,7 @@ public class JudgeInfo {
     static {
         DEFAULT.setMemory(0L);
         DEFAULT.setTime(0L);
-        DEFAULT.setMessage("默认信息");
+        DEFAULT.setMessage("未判题");
     }
 
     private String message;

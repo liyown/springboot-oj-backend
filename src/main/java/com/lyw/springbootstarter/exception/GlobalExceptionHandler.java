@@ -1,6 +1,7 @@
 package com.lyw.springbootstarter.exception;
 
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.lyw.springbootstarter.common.BaseResponse;
 import com.lyw.springbootstarter.common.ErrorCode;
 import com.lyw.springbootstarter.common.ResultUtils;
@@ -28,5 +29,11 @@ public class GlobalExceptionHandler {
     public BaseResponse<?> runtimeExceptionHandler(RuntimeException e) {
         log.error("RuntimeException", e);
         return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
+    }
+
+    @ExceptionHandler(BlockException.class)
+    public BaseResponse<?> blockExceptionHandler(BlockException e) {
+        log.error("BlockException", e);
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统繁忙，请稍后再试");
     }
 }

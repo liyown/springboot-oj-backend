@@ -15,7 +15,9 @@ public interface QuestionSubmitConstant {
     String QUESTION_STATUS_JUDGING = "judging";
     String QUESTION_STATUS_SUCCESS = "success";
     String QUESTION_STATUS_FAIL = "fail";
-    String JUDGE_RESULT_SUCCESS = "Accepted";
+
+
+    String JUDGE_RESULT_ACCEPTED = "Accepted";
     String JUDGE_RESULT_WRONG_ANSWER = "Wrong Answer";
     String JUDGE_RESULT_TIME_LIMIT_EXCEEDED = "Time Limit Exceeded";
     String JUDGE_RESULT_MEMORY_LIMIT_EXCEEDED = "Memory Limit Exceeded";

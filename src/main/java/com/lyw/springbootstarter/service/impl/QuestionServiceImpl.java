@@ -3,6 +3,7 @@ package com.lyw.springbootstarter.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyw.springbootstarter.common.ErrorCode;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -50,14 +52,25 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         String title = questionGetRequest.getTitle();
         String content = questionGetRequest.getContent();
         List<String> tags = questionGetRequest.getTags();
-        String tagSql = tags == null ? null : tags.stream().map(tag -> "tags Like '%" + tag + "%'").collect(Collectors.joining(" AND "));
+        StringBuilder patternBuilder = new StringBuilder();
+        if (tags != null && !tags.isEmpty()) {
+            patternBuilder.append("tags REGEXP '");
+            for (String tag : tags) {
+                patternBuilder.append("(?=.*").append(tag).append(")");
+            }
+            patternBuilder.append("'");
+        } else {
+            patternBuilder.append("1=1");
+        }
+        String tagSql = patternBuilder.toString();
+        log.info("tagSql: {}", tagSql);
         String sortField = questionGetRequest.getSortField();
         String sortOrder = questionGetRequest.getSortOrder();
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title)
                     .like(StringUtils.isNotBlank(content), "content", content)
                     .eq(id != null, "id", id)
-                    .and(SqlUtils.validSortField(tagSql), i -> i.apply(tagSql))
+                    .and(i -> i.apply(tagSql))
                     .orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                              sortField);
         return queryWrapper;

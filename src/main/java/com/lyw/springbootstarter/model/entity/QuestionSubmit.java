@@ -26,8 +26,12 @@ public class QuestionSubmit implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+    // 判题状态
     private String status;
+    // 判题信息
     private String judgeInfo;
+
+
     // 有索引
     private Long questionId;
     // 有索引
